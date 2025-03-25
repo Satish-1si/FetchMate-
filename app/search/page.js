@@ -197,10 +197,25 @@ export default function SearchPage() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        py: 4,
+        fontFamily: "'Arial', sans-serif", // Change font family
+      }}
+    >
   {/* Title & Controls */}
   <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-    <Typography variant="h4" sx={{ fontWeight: "bold", color: "#4caf50" }}>🐾 Find Your Perfect Dog</Typography>
+    <Typography
+      variant="h4"
+      sx={{
+        fontWeight: "bold",
+        color: "#4caf50",
+        fontFamily: "'Arial', sans-serif", // Ensure consistent font family
+      }}
+    >
+      🐾 Find Your Perfect Dog
+    </Typography>
 
     {/* View Mode Toggle & Favorites */}
     <Box>
@@ -263,124 +278,191 @@ export default function SearchPage() {
 
   {/* Sidebar for Filters */}
   <Drawer
-  anchor="left"
-  open={filterOpen}
-  onClose={() => setFilterOpen(false)}
-  sx={{
-    "& .MuiDrawer-paper": {
-      width: { xs: "100%", sm: "300px" }, // Responsive width
-      background: "rgba(255, 255, 255, 0.1)",
-      backdropFilter: "blur(15px)",
-      p: 3,
-      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-      display: "flex",
-      flexDirection: "column",
-    },
-  }}
->
-  
-  {/* Close Icon at the Top */}
-  <IconButton
-    onClick={() => setFilterOpen(false)}
+    anchor="left"
+    open={filterOpen}
+    onClose={() => setFilterOpen(false)}
+    variant="persistent" // Persistent drawer to keep it always visible
     sx={{
-      position: "absolute",
-      top: 10,
-      left: 10,
-      color: "#333",
-      "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" },
+      "& .MuiDrawer-paper": {
+        width: { xs: "100%", sm: "300px" }, // Fixed width for the filter
+        background: "#f9f9f9", // Light background
+        p: 3,
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+        display: "flex",
+        flexDirection: "column",
+        position: "fixed", // Fixed position
+        top: 0,
+        height: "100vh", // Full viewport height
+        zIndex: 1200,
+        borderRight: "1px solid #ddd", // Border for separation
+      },
     }}
   >
-    <CloseIcon />
-  </IconButton>
-
-  {/* Filter Content */}
-  <Box
-    sx={{
-      flexGrow: 1, // Makes content take up remaining space
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      mt: 5,
-      gap: 2,
-    }}
-  >
-    {/* Title */}
-    <Typography variant="h6" sx={{ fontWeight: "bold", color: "#333" }}>
-      🔍 Search & Filters
-    </Typography>
-
-    {/* Filters */}
-    <Box display="flex" flexDirection="column" gap={2} width="100%">
-      <TextField
-        label="🔎 Search by Name"
-        variant="outlined"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        fullWidth
-        sx={{ bgcolor: "white", borderRadius: 1 }}
-      />
-
-      <FormControl fullWidth sx={{ bgcolor: "white", borderRadius: 1 }}>
-        <InputLabel>🐶 Breed</InputLabel>
-        <Select value={selectedBreed} onChange={(e) => setSelectedBreed(e.target.value)}>
-          <MenuItem value="">All Breeds</MenuItem>
-          {breeds.map((breed) => (
-            <MenuItem key={breed} value={breed}>
-              {breed}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <TextField
-        label="📍 Zip Code"
-        variant="outlined"
-        value={zipCode}
-        onChange={(e) => setZipCode(e.target.value)}
-        fullWidth
-        sx={{ bgcolor: "white", borderRadius: 1 }}
-      />
-
-      <FormControl fullWidth sx={{ bgcolor: "white", borderRadius: 1 }}>
-        <InputLabel>📊 Sort By</InputLabel>
-        <Select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-          <MenuItem value="">None</MenuItem>
-          <MenuItem value="name:asc">Name (A-Z)</MenuItem>
-          <MenuItem value="name:desc">Name (Z-A)</MenuItem>
-          <MenuItem value="age:asc">Age (Ascending)</MenuItem>
-          <MenuItem value="age:desc">Age (Descending)</MenuItem>
-        </Select>
-      </FormControl>
-
-      <TextField
-        label="🐾 Age"
-        variant="outlined"
-        value={age}
-        onChange={(e) => setAge(e.target.value)}
-        fullWidth
-        sx={{ bgcolor: "white", borderRadius: 1 }}
-      />
-    </Box>
-  </Box>
-
-  {/* Reset Button at the Bottom */}
-  <Box sx={{ display: "flex", justifyContent: "center", p: 2 , mb: "5px" }}>
-    <IconButton onClick={resetFilters} sx={{ color: "#333" }}>
-      <ReplayIcon />
+    {/* Close Icon at the Top */}
+    <IconButton
+      onClick={() => setFilterOpen(false)}
+      sx={{
+        position: "absolute",
+        top: 10,
+        left: 10,
+        color: "#333",
+        "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.1)" },
+      }}
+    >
+      <CloseIcon />
     </IconButton>
-  </Box>
-</Drawer>
 
+    {/* Filter Content */}
+    <Box
+      sx={{
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        mt: 5,
+        gap: 2,
+      }}
+    >
+      {/* Title */}
+      <Typography variant="h6" sx={{ fontWeight: "bold", color: "#444" }}>
+        🔍 Filters
+      </Typography>
 
+      {/* Filters */}
+      <Box display="flex" flexDirection="column" gap={2} width="100%">
+        <TextField
+          label="Search by Name"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          fullWidth
+          sx={{
+            bgcolor: "white",
+            borderRadius: 1,
+            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+          }}
+        />
+
+        <FormControl fullWidth sx={{ bgcolor: "white", borderRadius: 1 }}>
+          <InputLabel>Breed</InputLabel>
+          <Select
+            value={selectedBreed}
+            onChange={(e) => setSelectedBreed(e.target.value)}
+            sx={{
+              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+              borderRadius: 1,
+            }}
+          >
+            <MenuItem value="">All Breeds</MenuItem>
+            {breeds.map((breed) => (
+              <MenuItem key={breed} value={breed}>
+                {breed}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Zip Code"
+          variant="outlined"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
+          fullWidth
+          sx={{
+            bgcolor: "white",
+            borderRadius: 1,
+            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+          }}
+        />
+
+        <FormControl fullWidth sx={{ bgcolor: "white", borderRadius: 1 }}>
+          <InputLabel>Sort By</InputLabel>
+          <Select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            sx={{
+              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+              borderRadius: 1,
+            }}
+          >
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value="name:asc">Name (A-Z)</MenuItem>
+            <MenuItem value="name:desc">Name (Z-A)</MenuItem>
+            <MenuItem value="age:asc">Age (Ascending)</MenuItem>
+            <MenuItem value="age:desc">Age (Descending)</MenuItem>
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Age"
+          variant="outlined"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          fullWidth
+          sx={{
+            bgcolor: "white",
+            borderRadius: 1,
+            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+          }}
+        />
+      </Box>
+    </Box>
+
+    {/* Reset Button at the Bottom */}
+    <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+      <Button
+        onClick={resetFilters}
+        variant="contained"
+        color="secondary"
+        sx={{
+          borderRadius: 1,
+          textTransform: "none",
+          fontWeight: "bold",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+          mb:2
+        }}
+      >
+        Reset Filters
+      </Button>
+    </Box>
+  </Drawer>
 
   {/* Dog List */}
-  <Grid container spacing={3} sx={{ mt: 3 }}>
-    {dogs.map((dog) => (
-      <Grid item key={dog.id} xs={viewMode === "grid" ? 6 : 6} sm={6} md={4}>
-        <DogCard dog={dog} isFavorite={favorites.includes(dog.id)} onFavoriteToggle={toggleFavorite} />
-      </Grid>
-    ))}
-  </Grid>
+  <Box
+    sx={{
+      ml: filterOpen ? { xs: 0, sm: "300px" } : 0, // Adjust margin when filter is open
+      mt: 3,
+      transition: "margin-left 0.3s ease", // Smooth transition for margin adjustment
+    }}
+  >
+    <Grid container spacing={filterOpen ? 2 : 3}> {/* Adjust spacing when filter is open */}
+      {dogs.map((dog) => (
+        <Grid
+          item
+          key={dog.id}
+          xs={filterOpen ? 12 : viewMode === "grid" ? 6 : 12} // Compress cards when filter is open
+          sm={filterOpen ? 6 : viewMode === "grid" ? 4 : 12}
+          md={filterOpen ? 4 : viewMode === "grid" ? 3 : 12}
+        >
+          <DogCard
+            dog={dog}
+            isFavorite={favorites.includes(dog.id)}
+            onFavoriteToggle={toggleFavorite}
+            sx={{
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              overflow: "hidden",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+                boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+              },
+            }}
+          />
+        </Grid>
+      ))}
+    </Grid>
+  </Box>
 
   
 </Container>
