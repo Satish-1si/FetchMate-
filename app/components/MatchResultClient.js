@@ -5,13 +5,16 @@ import { CircularProgress, Box, Typography, Card, CardContent, CardMedia, IconBu
 import { useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Confetti from "react-confetti"; // Optional: For the confetti effect
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useRouter } from "next/navigation";
+
 
 const MatchResultClient = ({ matchId }) => {
   const [dog, setDog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const theme = useTheme();
-
+  const router = useRouter();
   // Handle dynamic window size for Confetti
   useEffect(() => {
     const handleResize = () => {
@@ -77,11 +80,22 @@ const MatchResultClient = ({ matchId }) => {
       }}
     >
       {/* Favorite Icon - Positioned Top Right */}
-      <Box sx={{ position: "absolute", top: 20, right: 20 }}>
-        <IconButton color="error" href="/favorites">
-          <FavoriteIcon sx={{ fontSize: 40 }} />
-        </IconButton>
+      <Box sx={{ position: "absolute", top: 0, left: 0 }}>
+             <IconButton
+              onClick={() => router.push("/search")} // Navigate back to the previous page
+              sx={{
+                position: "absolute",
+                top: 15,
+                left: 15,
+                backgroundColor: "rgba(255, 255, 255, 0.7)",
+                "&:hover": { backgroundColor: "rgba(200, 200, 200, 0.8)" },
+              }}
+              
+            >
+              <ArrowBackIcon />
+              </IconButton>
       </Box>
+
 
       {/* Congrats Message */}
       <Typography

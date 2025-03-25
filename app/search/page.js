@@ -23,6 +23,8 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import ClearIcon from "@mui/icons-material/Clear"; // Import the Clear icon
 import DogCard from "../components/DogCard";
+import CloseIcon from '@mui/icons-material/Close';
+import ReplayIcon from "@mui/icons-material/Replay";
 
 export default function SearchPage() {
   const [dogs, setDogs] = useState([]);
@@ -197,7 +199,7 @@ export default function SearchPage() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
   {/* Title & Controls */}
-  <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+  <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
     <Typography variant="h4" sx={{ fontWeight: "bold", color: "#4caf50" }}>🐾 Find Your Perfect Dog</Typography>
 
     {/* View Mode Toggle & Favorites */}
@@ -235,124 +237,146 @@ export default function SearchPage() {
 
   {/* Pagination Controls */}
   {!loading && dogs.length > 0 && (
-    <Box display="flex" justifyContent="right" sx={{ mt: 3 }}>
-      <Pagination
-        count={pageCount}
-        page={page}
-        onChange={handlePageChange}
-        siblingCount={1}
-        boundaryCount={1}
-        color="primary"
-      />
-    </Box>
-  )}
+  <Box display="flex" justifyContent="right" sx={{ mt: 3 }}>
+    <Pagination
+      count={pageCount}
+      page={page}
+      onChange={handlePageChange}
+      siblingCount={1}
+      boundaryCount={1}
+      color="primary"
+      shape="rounded"
+      sx={{
+        "& .MuiPaginationItem-root": {
+          borderRadius: "50%", // Makes each page number circular
+          width: "36px", // Adjust size
+          height: "36px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      }}
+    />
+  </Box>
+)}
+
 
   {/* Sidebar for Filters */}
-  <Drawer anchor="left" open={filterOpen} onClose={() => setFilterOpen(false)}>
-    <Box sx={{ width: 300, p: 3 }}>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="h6">Filters</Typography>
-        <IconButton onClick={resetFilters} color="error">
-          <ClearIcon />
-        </IconButton>
-      </Box>
-      
-      {/* Search & Filters Section */}
-      <Box mt={2}>
-        <TextField
-          label="Search by Name"
-          fullWidth
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ my: 2 }}
-        />
+  <Drawer
+  anchor="left"
+  open={filterOpen}
+  onClose={() => setFilterOpen(false)}
+  sx={{
+    "& .MuiDrawer-paper": {
+      width: { xs: "100%", sm: "300px" }, // Responsive width
+      background: "rgba(255, 255, 255, 0.1)",
+      backdropFilter: "blur(15px)",
+      p: 3,
+      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+      display: "flex",
+      flexDirection: "column",
+    },
+  }}
+>
+  
+  {/* Close Icon at the Top */}
+  <IconButton
+    onClick={() => setFilterOpen(false)}
+    sx={{
+      position: "absolute",
+      top: 10,
+      left: 10,
+      color: "#333",
+      "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" },
+    }}
+  >
+    <CloseIcon />
+  </IconButton>
 
-        <FormControl fullWidth sx={{ my: 2 }}>
-          <InputLabel>Filter by Breed</InputLabel>
-          <Select value={selectedBreed} onChange={(e) => setSelectedBreed(e.target.value)}>
-            <MenuItem value="">All Breeds</MenuItem>
-            {breeds.map((breed) => (
-              <MenuItem key={breed} value={breed}>{breed}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+  {/* Filter Content */}
+  <Box
+    sx={{
+      flexGrow: 1, // Makes content take up remaining space
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      mt: 5,
+      gap: 2,
+    }}
+  >
+    {/* Title */}
+    <Typography variant="h6" sx={{ fontWeight: "bold", color: "#333" }}>
+      🔍 Search & Filters
+    </Typography>
 
-           
-        <Box display="flex" flexDirection="column" sx={{ my: 2 }}>
-          <TextField
-            label="Zip Code"
-            fullWidth
-            value={zipCode}
-            onChange={(e) => setZipCode(e.target.value)}
-          />
-                {/* Sorting Filter */}
-                <FormControl fullWidth sx={{ my: 2 }}>
-          <InputLabel>Filter By</InputLabel>
-          <Select value={sortOption} label="Filter By" onChange={(e) => setSortOption(e.target.value)}>
-            <MenuItem value="">None</MenuItem>
-            <MenuItem value="name:asc">Name (A-Z)</MenuItem>
-            <MenuItem value="name:desc">Name (Z-A)</MenuItem>
-            <MenuItem value="age:asc">Age (Ascending)</MenuItem>
-            <MenuItem value="age:desc">Age (Descending)</MenuItem>
-          </Select>
-        </FormControl>
+    {/* Filters */}
+    <Box display="flex" flexDirection="column" gap={2} width="100%">
+      <TextField
+        label="🔎 Search by Name"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        fullWidth
+        sx={{ bgcolor: "white", borderRadius: 1 }}
+      />
 
-        <TextField
-          label="Age"
-          fullWidth
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          sx={{ my: 2 }}
-        />
-     
-          {/* <TextField
-            label="Latitude"
-            fullWidth
-            value={latitude}
-            onChange={(e) => setLatitude(e.target.value)}
-            sx={{ mt: 1 }}
-          />
-          <TextField
-            label="Longitude"
-            fullWidth
-            value={longitude}
-            onChange={(e) => setLongitude(e.target.value)}
-            sx={{ mt: 1 }}
-          /> */}
-        </Box>
+      <FormControl fullWidth sx={{ bgcolor: "white", borderRadius: 1 }}>
+        <InputLabel>🐶 Breed</InputLabel>
+        <Select value={selectedBreed} onChange={(e) => setSelectedBreed(e.target.value)}>
+          <MenuItem value="">All Breeds</MenuItem>
+          {breeds.map((breed) => (
+            <MenuItem key={breed} value={breed}>
+              {breed}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-        {/* <Box display="flex" flexDirection="column" sx={{ my: 2 }}>
-          <TextField
-            label="City"
-            fullWidth
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <TextField
-            label="State"
-            fullWidth
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-            sx={{ mt: 1 }}
-          />
-          <TextField
-            label="County"
-            fullWidth
-            value={county}
-            onChange={(e) => setCounty(e.target.value)}
-            sx={{ mt: 1 }}
-          />
-        </Box> */}
+      <TextField
+        label="📍 Zip Code"
+        variant="outlined"
+        value={zipCode}
+        onChange={(e) => setZipCode(e.target.value)}
+        fullWidth
+        sx={{ bgcolor: "white", borderRadius: 1 }}
+      />
 
+      <FormControl fullWidth sx={{ bgcolor: "white", borderRadius: 1 }}>
+        <InputLabel>📊 Sort By</InputLabel>
+        <Select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+          <MenuItem value="">None</MenuItem>
+          <MenuItem value="name:asc">Name (A-Z)</MenuItem>
+          <MenuItem value="name:desc">Name (Z-A)</MenuItem>
+          <MenuItem value="age:asc">Age (Ascending)</MenuItem>
+          <MenuItem value="age:desc">Age (Descending)</MenuItem>
+        </Select>
+      </FormControl>
 
-      </Box>
+      <TextField
+        label="🐾 Age"
+        variant="outlined"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+        fullWidth
+        sx={{ bgcolor: "white", borderRadius: 1 }}
+      />
     </Box>
-  </Drawer>
+  </Box>
+
+  {/* Reset Button at the Bottom */}
+  <Box sx={{ display: "flex", justifyContent: "center", p: 2 , mb: "5px" }}>
+    <IconButton onClick={resetFilters} sx={{ color: "#333" }}>
+      <ReplayIcon />
+    </IconButton>
+  </Box>
+</Drawer>
+
+
 
   {/* Dog List */}
   <Grid container spacing={3} sx={{ mt: 3 }}>
     {dogs.map((dog) => (
-      <Grid item key={dog.id} xs={viewMode === "grid" ? 12 : 6} sm={6} md={4}>
+      <Grid item key={dog.id} xs={viewMode === "grid" ? 6 : 6} sm={6} md={4}>
         <DogCard dog={dog} isFavorite={favorites.includes(dog.id)} onFavoriteToggle={toggleFavorite} />
       </Grid>
     ))}

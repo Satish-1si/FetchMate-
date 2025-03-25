@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Router } from "next/router";
+
 
 const FavoritesPage = () => {
   const [dogDetails, setDogDetails] = useState([]);
@@ -86,6 +89,19 @@ const FavoritesPage = () => {
 
   return (
     <Box sx={{ padding: "20px", textAlign: "center", background: "linear-gradient(135deg, #f4f4f4, #e0e0e0)", minHeight: "100vh" }}>
+       <IconButton
+    onClick={() => router.push("/search")} // Navigate back to the previous page
+    sx={{
+      position: "absolute",
+      top: 15,
+      left: 15,
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      "&:hover": { backgroundColor: "rgba(200, 200, 200, 0.8)" },
+    }}
+    
+  >
+    <ArrowBackIcon />
+  </IconButton>
       <Typography variant="h4" fontWeight="bold" color="#333" gutterBottom>
         ❤️ Your Favorite Dogs
       </Typography>
@@ -150,9 +166,9 @@ const FavoritesPage = () => {
             </Grid>
           ))
         ) : (
-          <Typography variant="h5" color="gray">
-            You haven't added any favorites yet.
-          </Typography>
+          <Typography variant="h6" sx={{ mt: 4, color: "black" }}>
+          You haven't added any favorites yet  ...
+        </Typography>
         )}
       </Grid>
       {dogDetails.length > 1 && (
