@@ -106,8 +106,8 @@ const MatchResultClient = ({ matchId }) => {
       {/* Card for Dog Information */}
       <Card
         sx={{
-          maxWidth: 500,
-          width: "100%",
+          maxWidth: 400,
+          width: "50%",
           boxShadow: 10, // Subtle shadow for depth
           borderRadius: 3, // Rounded corners for a smoother look
           overflow: "hidden",
@@ -118,13 +118,13 @@ const MatchResultClient = ({ matchId }) => {
             boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.15)",
           },
           position: "relative",
-          marginTop: 10, // Spacing for congrats message
+          marginTop: 1, // Spacing for congrats message
         }}
       >
         <CardMedia
           component="img"
           alt={dog.name}
-          height="400"
+          height="250"
           image={dog.img || "/default-dog.jpg"}
           sx={{ objectFit: "cover" }}
         />
