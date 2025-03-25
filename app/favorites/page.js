@@ -13,14 +13,19 @@ import {
 import { Delete } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Router } from "next/router";
 
 
 const FavoritesPage = () => {
   const [dogDetails, setDogDetails] = useState([]);
   const [selectedDogs, setSelectedDogs] = useState([]);
   const router = useRouter();
-
+     useEffect(( )=>{
+         const userPermissions =localStorage.getItem("userPermissions");
+         console.log(userPermissions)
+         if(!userPermissions){
+              router.push("/"); 
+         }
+      },[])
   const fetchDogs = async (dogIds) => {
     if (dogIds.length === 0) return;
 

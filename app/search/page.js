@@ -48,24 +48,46 @@ export default function SearchPage() {
   const [sortOption, setSortOption] = useState(""); // Sorting state
 
   const router = useRouter();
-
+  //component handling.....
+    useEffect(( )=>{
+        const userPermissions =localStorage.getItem("userPermissions");
+        console.log(userPermissions)
+        if(!userPermissions){
+             router.push("/"); 
+        }
+     },[])
   // Fetch Breeds on Mount
   useEffect(() => {
     const fetchBreeds = async () => {
-      setLoading(true); // Set loading to true while fetching breeds
-      setError(""); // Clear previous error
+      setLoading(true);
+      setError("");
       try {
         const res = await fetch("https://frontend-take-home-service.fetch.com/dogs/breeds", {
           credentials: "include",
         });
-        if (!res.ok) throw new Error("Failed to fetch breeds.");
-        const breedsData = await res.json();
-        setBreeds(breedsData);
+        if (!res.ok) {
+          const errorText = await res.text(); // Read response as text
+          if (res.status === 401 || errorText === "Unauthorized") {
+            router.push("/"); // Redirect to login if unauthorized
+            return;
+          } else {
+            throw new Error("Failed to fetch breeds.");
+          }
+        }
+    
+        // Check if response is JSON
+        const contentType = res.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          const breedsData = await res.json();
+          setBreeds(breedsData);
+        } else {
+          throw new Error("Unexpected response format.");
+        }
       } catch (err) {
         console.error("Breed fetch error:", err);
         setError("Failed to load dog breeds. Please try again later.");
       } finally {
-        setLoading(false); // Set loading to false once fetching breeds is done
+        setLoading(false);
       }
     };
     fetchBreeds();
@@ -75,17 +97,13 @@ export default function SearchPage() {
   const fetchDogs = async () => {
     setLoading(true);
     setError("");
-  
     try {
       let queryParams = new URLSearchParams();
-  
       // Apply filters only if they have a value
       if (selectedBreed) queryParams.append("breeds", selectedBreed);
       if (zipCode) queryParams.append("zipCodes", zipCode);
       if (latitude) queryParams.append("latitude", latitude);
       if (longitude) queryParams.append("longitude", longitude);
-      if (city) queryParams.append("city", city);
-      if (state) queryParams.append("state", state);
       if (county) queryParams.append("county", county);
   
       const size = 10; // Number of items per page
@@ -102,40 +120,66 @@ export default function SearchPage() {
         { credentials: "include" }
       );
   
-      if (!res.ok) throw new Error("Failed to fetch dogs.");
-  
-      const { resultIds, total } = await res.json();
-      setTotal(total); // Use API-provided total count
-  
-      if (!resultIds || resultIds.length === 0) {
-        setDogs([]);
-        return;
+      if (!res.ok) {
+        const errorText = await res.text(); // Read response as text
+        if (res.status === 401 || errorText === "Unauthorized") {
+          router.push("/"); // Redirect to login if unauthorized
+          return;
+        } else {
+          throw new Error("Failed to fetch dogs.");
+        }
       }
   
-      // Fetch dog details using the result IDs
-      const dogDetailsRes = await fetch("https://frontend-take-home-service.fetch.com/dogs", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resultIds),
-      });
+      // Check if response is JSON
+      const contentType = res.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
+        const { resultIds, total } = await res.json();
+        setTotal(total);
   
-      if (!dogDetailsRes.ok) throw new Error("Failed to fetch dog details.");
+        if (!resultIds || resultIds.length === 0) {
+          setDogs([]);
+          return;
+        }
   
-      let dogDetails = await dogDetailsRes.json();
+        const dogDetailsRes = await fetch("https://frontend-take-home-service.fetch.com/dogs", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(resultIds),
+        });
   
-      // Apply frontend filtering only on name and age
-      if (searchTerm) {
-        dogDetails = dogDetails.filter((dog) =>
-          dog.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        if (!dogDetailsRes.ok) {
+          const errorText = await dogDetailsRes.text(); // Read response as text
+          if (dogDetailsRes.status === 401 || errorText === "Unauthorized") {
+            router.push("/"); // Redirect to login if unauthorized
+            return;
+          } else {
+            throw new Error("Failed to fetch dog details.");
+          }
+        }
+  
+        const dogDetailsContentType = dogDetailsRes.headers.get("Content-Type");
+        if (dogDetailsContentType && dogDetailsContentType.includes("application/json")) {
+          let dogDetails = await dogDetailsRes.json();
+  
+          // Apply frontend filtering only on name and age
+          if (searchTerm) {
+            dogDetails = dogDetails.filter((dog) =>
+              dog.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+          }
+  
+          if (age) {
+            dogDetails = dogDetails.filter((dog) => dog.age == age);
+          }
+  
+          setDogs(dogDetails);
+        } else {
+          throw new Error("Unexpected response format.");
+        }
+      } else {
+        throw new Error("Unexpected response format.");
       }
-  
-      if (age) {
-        dogDetails = dogDetails.filter((dog) => dog.age == age);
-      }
-  
-      setDogs(dogDetails);
     } catch (err) {
       console.error("Error fetching dogs:", err);
       setError("Failed to load dogs. Please try again later.");
@@ -193,6 +237,7 @@ export default function SearchPage() {
       credentials: "include",
     }).then(() => {
       router.push("/"); // Redirect to login page after logout
+      localStorage.setItem("userPermissions",false);
     });
   };
 
@@ -285,9 +330,13 @@ export default function SearchPage() {
     sx={{
       "& .MuiDrawer-paper": {
         width: { xs: "100%", sm: "300px" }, // Fixed width for the filter
-        background: "#f9f9f9", // Light background
         p: 3,
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+        background: "rgba(255, 255, 255, 0.1)", // Light transparent white
+backdropFilter: "blur(12px)", // Strong blur effect
+borderRadius: "10px", // Smooth rounded corners
+border: "1px solid rgba(255, 255, 255, 0.2)", // Subtle border
+boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Soft shadow
+
         display: "flex",
         flexDirection: "column",
         position: "fixed", // Fixed position

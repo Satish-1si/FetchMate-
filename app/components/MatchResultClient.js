@@ -15,6 +15,14 @@ const MatchResultClient = ({ matchId }) => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const theme = useTheme();
   const router = useRouter();
+
+     useEffect(( )=>{
+         const userPermissions =localStorage.getItem("userPermissions");
+         console.log(userPermissions)
+         if(!userPermissions){
+              router.push("/"); 
+         }
+      },[])
   // Handle dynamic window size for Confetti
   useEffect(() => {
     const handleResize = () => {

@@ -20,6 +20,7 @@ export default function LoginPage() {
     try {
       await loginUser(name, email); // Call loginUser function
       router.push("/search"); // Redirect to Dog Search page
+      localStorage.setItem("userPermissions",true);
     } catch (err) {
       setError(err.message); // Set error message on failed login
     } finally {

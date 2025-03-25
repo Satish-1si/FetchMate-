@@ -2,9 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Card, CardMedia, CardContent, Typography, Button, Box, IconButton } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useRouter } from "next/navigation";
 
 export default function DogCard({ dog, onAdopt, onFavorite }) {
   const [isFavorited, setIsFavorited] = useState(false);
+   const router = useRouter();
+   useEffect(( )=>{
+       const userPermissions =localStorage.getItem("userPermissions");
+       console.log(userPermissions)
+       if(!userPermissions){
+            router.push("/"); 
+       }
+    },[])
+
   useEffect(() => {
     // Check if the dog is favorited in localStorage
     const favoriteDogs = JSON.parse(localStorage.getItem("favoriteDogs")) || [];
