@@ -106,7 +106,7 @@ export default function SearchPage() {
       if (longitude) queryParams.append("longitude", longitude);
       if (county) queryParams.append("county", county);
   
-      const size = 10; // Number of items per page
+      const size = 9; // Number of items per page
       const from = (page - 1) * size; // Calculate offset
   
       queryParams.append("size", size);
@@ -250,7 +250,15 @@ export default function SearchPage() {
       }}
     >
   {/* Title & Controls */}
-  <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+  <Box
+  sx={{
+    ml: filterOpen ? { xs: 0, sm: "340px" } : 0, // Adjust margin when filter is open
+    mt: 3,
+    transition: "margin-left 0.3s ease", // Smooth transition for margin adjustment
+  }}
+>
+  {/* Title & Controls */}
+  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
     <Typography
       variant="h4"
       sx={{
@@ -265,7 +273,7 @@ export default function SearchPage() {
     {/* View Mode Toggle & Favorites */}
     <Box>
       <IconButton onClick={() => setFilterOpen(true)} color="secondary">
-        <ViewListIcon /> 
+        <ViewListIcon />
       </IconButton>
       <IconButton onClick={() => router.push("/favorites")} color="secondary">
         ❤️
@@ -295,30 +303,7 @@ export default function SearchPage() {
     </Box>
   )}
 
-  {/* Pagination Controls */}
-  {!loading && dogs.length > 0 && (
-  <Box display="flex" justifyContent="right" sx={{ mt: 3 }}>
-    <Pagination
-      count={pageCount}
-      page={page}
-      onChange={handlePageChange}
-      siblingCount={1}
-      boundaryCount={1}
-      color="primary"
-      shape="rounded"
-      sx={{
-        "& .MuiPaginationItem-root": {
-          borderRadius: "50%", // Makes each page number circular
-          width: "36px", // Adjust size
-          height: "36px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        },
-      }}
-    />
-  </Box>
-)}
+ 
 
 
   {/* Sidebar for Filters */}
@@ -329,7 +314,7 @@ export default function SearchPage() {
     variant="persistent" // Persistent drawer to keep it always visible
     sx={{
       "& .MuiDrawer-paper": {
-        width: { xs: "100%", sm: "300px" }, // Fixed width for the filter
+        width: { xs: "100%", sm: "250px" }, // Fixed width for the filter
         p: 3,
         background: "rgba(255, 255, 255, 0.1)", // Light transparent white
 backdropFilter: "blur(12px)", // Strong blur effect
@@ -479,7 +464,6 @@ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Soft shadow
   {/* Dog List */}
   <Box
     sx={{
-      ml: filterOpen ? { xs: 0, sm: "300px" } : 0, // Adjust margin when filter is open
       mt: 3,
       transition: "margin-left 0.3s ease", // Smooth transition for margin adjustment
     }}
@@ -490,8 +474,8 @@ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Soft shadow
           item
           key={dog.id}
           xs={filterOpen ? 12 : viewMode === "grid" ? 6 : 12} // Compress cards when filter is open
-          sm={filterOpen ? 6 : viewMode === "grid" ? 4 : 12}
-          md={filterOpen ? 4 : viewMode === "grid" ? 3 : 12}
+          sm={filterOpen ? 6 : viewMode === "grid" ? 3 : 12}
+          md={filterOpen ? 4 : viewMode === "grid" ? 4 : 12}
         >
           <DogCard
             dog={dog}
@@ -512,6 +496,34 @@ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Soft shadow
       ))}
     </Grid>
   </Box>
+
+   {/* Pagination Controls */}
+   {!loading && dogs.length > 0 && (
+  <Box display="flex" justifyContent="right" sx={{ mt: 3 }}>
+    <Pagination
+      count={pageCount}
+      page={page}
+      onChange={handlePageChange}
+      siblingCount={1}
+      boundaryCount={1}
+      color="primary"
+      shape="rounded"
+      sx={{
+        "& .MuiPaginationItem-root": {
+          borderRadius: "50%", // Makes each page number circular
+          width: "36px", // Adjust size
+          height: "36px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      }}
+    />
+  </Box>
+)}
+
+  
+</Box>
 
   
 </Container>

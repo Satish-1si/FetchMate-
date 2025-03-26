@@ -45,7 +45,7 @@ export default function DogCard({ dog, onAdopt, onFavorite }) {
   return (
     <Card
       sx={{
-        maxWidth: 365,
+        maxWidth: 345,
         borderRadius: 4,
         overflow: "hidden",
         backgroundColor: "#fff",
